@@ -1,3 +1,5 @@
+// Julio Cesar Vivas Medina A01749879
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -34,8 +36,15 @@ public class CambiaAnimacion : MonoBehaviour
             }
         }
         
-        animator.SetFloat("velocidad", Mathf.Abs(fixedVelocity)); // Use the absolute value of rb.velocity.x
-        spriteRenderer.flipX = lastDirection < 0; // Usar la última dirección para determinar si se debe voltear el sprite
+        animator.SetFloat("velocidad", CheckGround.isGrounded ? Mathf.Abs(fixedVelocity) : 0); // Si el personaje está saltando, la velocidad es 0
+
+        float horizontalInput = Input.GetAxis("Horizontal"); // Obtener la entrada del usuario para moverse horizontalmente
+        if (!CheckGround.isGrounded && horizontalInput != 0) { // Si el personaje está saltando y el usuario está presionando una tecla para moverse
+            spriteRenderer.flipX = horizontalInput < 0; // Voltear el sprite en función de la dirección de la entrada
+        } else if (CheckGround.isGrounded || rb.velocity.y < 0) { // Si el personaje está en el suelo o está cayendo
+            spriteRenderer.flipX = lastDirection < 0; // Usar la última dirección para determinar si se debe voltear el sprite
+        }
+
         animator.SetBool("isJump", !CheckGround.isGrounded);
     }
 }

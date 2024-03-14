@@ -9,6 +9,8 @@ public class CambiaAnimacion : MonoBehaviour
     private Rigidbody2D rb; // Declare a reference to the Rigidbody2D component
     // Declarar una referencia al componente SpriteRenderer
     private SpriteRenderer spriteRenderer;
+    private float fixedVelocity = 0f;
+    private float lastDirection = 1f; // 1f para derecha, -1f para izquierda
 
     // Start is called before the first frame update
     void Start()
@@ -21,17 +23,19 @@ public class CambiaAnimacion : MonoBehaviour
 
     void FixedUpdate()
     {
-        animator.SetFloat("velocidad", Mathf.Abs(rb.velocity.x)); // Use the absolute value of rb.velocity.x
-        spriteRenderer.flipX = rb.velocity.x < 0;
-        animator.SetBool("isJump", !CheckGround.isGrounded);
-        // if (rb.velocity.x > 0)
-        // {
-        //     spriteRenderer.flipX = false; // Set the flipX property to false
-        // }
-        // else if (rb.velocity.x < 0)
-        // {
-        //     spriteRenderer.flipX = true; // Set the flipX property to true
-        // }
+        float threshold = 0.01f; // Definir un umbral para la velocidad
 
+        if (Mathf.Abs(rb.velocity.x) < threshold) {
+            fixedVelocity = 0f;
+        } else {
+            fixedVelocity = rb.velocity.x;
+            if (CheckGround.isGrounded) { // Solo actualizar la dirección si el personaje está en el suelo
+                lastDirection = fixedVelocity > 0 ? 1f : -1f; // Actualizar la última dirección
+            }
+        }
+        
+        animator.SetFloat("velocidad", Mathf.Abs(fixedVelocity)); // Use the absolute value of rb.velocity.x
+        spriteRenderer.flipX = lastDirection < 0; // Usar la última dirección para determinar si se debe voltear el sprite
+        animator.SetBool("isJump", !CheckGround.isGrounded);
     }
 }

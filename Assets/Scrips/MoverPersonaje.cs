@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class MoverPersonaje : MonoBehaviour
 {
-    public float velocidadX = 2.0f; // float - 32 bits, double - 64 bits
-    public float velocidadY = 3.5f;
+    public float velocidadX = 5.0f; // float - 32 bits, double - 64 bits
+    public float velocidadY = 5.0f;
 
     // public LayerMask suelo;
     // public CircleCollider2D circleColider;
